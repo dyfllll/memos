@@ -109,12 +109,18 @@ const MemoView: React.FC<Props> = (props: Props) => {
     }
   };
 
-  const displayTime =
-    props.displayTimeFormat === "time" ? (
-      memo.displayTime?.toLocaleTimeString()
-    ) : (
-      <relative-time datetime={memo.displayTime?.toISOString()} format={relativeTimeFormat}></relative-time>
-    );
+
+  const displayTimeRelative = Date.now() - memo.displayTime!.getTime() > 1000 * 60 * 60 * 24 * 20 ? "" :
+    <relative-time datetime={memo.displayTime?.toISOString()} format={"relative"}></relative-time>;
+  const displayTime = <div>
+    {memo.displayTime?.toLocaleString("zh", { hour12: false })} {displayTimeRelative}
+  </div>;
+  // const displayTime =
+  //   props.displayTimeFormat === "time" ? (
+  //     memo.displayTime?.toLocaleTimeString()
+  //   ) : (
+  //     <relative-time datetime={memo.displayTime?.toISOString()} format={relativeTimeFormat}></relative-time>
+  //   );
 
   const handleHiddenActions = () => {
     const hiddenActions: ("edit" | "archive" | "delete" | "share" | "pin" | "remove_completed_task_list")[] = [];
