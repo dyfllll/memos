@@ -110,10 +110,10 @@ const MemoView: React.FC<Props> = (props: Props) => {
   };
 
 
-  const displayTimeRelative = Date.now() - memo.displayTime!.getTime() > 1000 * 60 * 60 * 24 * 20 ? "" :
+  const displayTimeRelative = Date.now() - memo.displayTime!.getTime() > 1000 * 60 * 60 * 24 * 29 ? "" :
     <relative-time datetime={memo.displayTime?.toISOString()} format={"relative"}></relative-time>;
   const displayTime = <div>
-    {memo.displayTime?.toLocaleString("zh", { hour12: false })} {displayTimeRelative}
+    {memo.displayTime?.toLocaleString("zh", { hourCycle: 'h23' })}  {displayTimeRelative}
   </div>;
   // const displayTime =
   //   props.displayTimeFormat === "time" ? (
