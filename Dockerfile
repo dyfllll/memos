@@ -6,30 +6,22 @@ COPY . .
 
 WORKDIR /frontend-build/web
 
-ENV NPM_CONFIG_REGISTRY=https://registry.npmmirror.com
-ENV COREPACK_NPM_REGISTRY=https://registry.npmmirror.com
-
-
-RUN corepack enable && pnpm i --frozen-lockfile
-
+RUN npm install -g pnpm
+RUN pnpm i --frozen-lockfile
 RUN pnpm build
 
 # Build backend exec file.
 FROM golang:1.23-alpine AS backend
 WORKDIR /backend-build
 
-ENV GOPROXY=https://goproxy.cn,direct
-
 COPY . .
 COPY --from=frontend /frontend-build/web/dist /backend-build/server/router/frontend/dist
 
-RUN CGO_ENABLED=0 go build -o memos ./bin/memos/main.go
+RUN go build -o memos ./bin/memos/main.go
 
 # Make workspace with above generated files.
 FROM alpine:latest AS monolithic
 WORKDIR /usr/local/memos
-
-ENV GOPROXY=https://goproxy.cn,direct
 
 RUN apk add --no-cache tzdata
 ENV TZ="UTC"
