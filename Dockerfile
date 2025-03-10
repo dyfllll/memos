@@ -28,7 +28,6 @@ RUN go build -o memos ./bin/memos/main.go
 FROM alpine:latest AS monolithic
 WORKDIR /usr/local/memos
 
-ENV GOPROXY=https://goproxy.cn,direct
 
 RUN apk add --no-cache tzdata
 ENV TZ="UTC"

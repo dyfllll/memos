@@ -150,7 +150,7 @@ const MemoView: React.FC<Props> = (props: Props) => {
         <>
           <div className="w-full flex flex-row justify-between items-center gap-2">
             <div className="w-auto max-w-[calc(100%-6rem)] grow flex flex-row justify-start items-center">
-              {props.showCreator && creator ? (
+              {false && props.showCreator && creator ? (
                 <div className="w-full flex flex-row justify-start items-center">
                   <Link className="w-auto hover:opacity-80" to={`/u/${encodeURIComponent(creator.username)}`} viewTransition>
                     <UserAvatar className="mr-2 shrink-0" avatarUrl={creator.avatarUrl} />
