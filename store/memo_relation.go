@@ -2,6 +2,7 @@ package store
 
 import (
 	"context"
+	"sort"
 )
 
 type MemoRelationType string
@@ -36,7 +37,11 @@ func (s *Store) UpsertMemoRelation(ctx context.Context, create *MemoRelation) (*
 }
 
 func (s *Store) ListMemoRelations(ctx context.Context, find *FindMemoRelation) ([]*MemoRelation, error) {
-	return s.driver.ListMemoRelations(ctx, find)
+	relations, err := s.driver.ListMemoRelations(ctx, find)
+	sort.Slice(relations, func(i, j int) bool {
+		return relations[i].MemoID < relations[j].MemoID
+	})
+	return relations, err
 }
 
 func (s *Store) DeleteMemoRelation(ctx context.Context, delete *DeleteMemoRelation) error {
