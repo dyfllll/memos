@@ -22,11 +22,10 @@ func (s *APIV1Service) SetMemoRelations(ctx context.Context, request *v1pb.SetMe
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to get memo")
 	}
-	referenceType := store.MemoRelationReference
+	// referenceType := store.MemoRelationReference
 	// Delete all reference relations first.
 	if err := s.Store.DeleteMemoRelation(ctx, &store.DeleteMemoRelation{
 		MemoID: &memo.ID,
-		Type:   &referenceType,
 	}); err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to delete memo relation")
 	}
@@ -38,9 +37,9 @@ func (s *APIV1Service) SetMemoRelations(ctx context.Context, request *v1pb.SetMe
 		}
 		// Ignore comment relations as there's no need to update a comment's relation.
 		// Inserting/Deleting a comment is handled elsewhere.
-		if relation.Type == v1pb.MemoRelation_COMMENT {
-			continue
-		}
+		// if relation.Type == v1pb.MemoRelation_COMMENT {
+		// 	continue
+		// }
 		relatedMemoUID, err := ExtractMemoUIDFromName(relation.RelatedMemo.Name)
 		if err != nil {
 			return nil, status.Errorf(codes.InvalidArgument, "invalid related memo name: %v", err)

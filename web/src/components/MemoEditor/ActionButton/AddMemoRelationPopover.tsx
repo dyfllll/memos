@@ -10,7 +10,7 @@ import { memoServiceClient } from "@/grpcweb";
 import { DEFAULT_LIST_MEMOS_PAGE_SIZE } from "@/helpers/consts";
 import useCurrentUser from "@/hooks/useCurrentUser";
 import { extractMemoIdFromName } from "@/store/v1";
-import { MemoRelation_Memo, MemoRelation_Type } from "@/types/proto/api/v1/memo_relation_service";
+import { MemoRelation, MemoRelation_Memo, MemoRelation_Type } from "@/types/proto/api/v1/memo_relation_service";
 import { Memo } from "@/types/proto/api/v1/memo_service";
 import { useTranslate } from "@/utils/i18n";
 import { EditorRefActions } from "../Editor";
@@ -30,6 +30,7 @@ const AddMemoRelationPopover = (props: Props) => {
   const [fetchedMemos, setFetchedMemos] = useState<Memo[]>([]);
   const [selectedMemos, setSelectedMemos] = useState<Memo[]>([]);
   const [embedded, setEmbedded] = useState<boolean>(false);
+  const [moveMemo, setMoveMemo] = useState<boolean>(true);
   const [popoverOpen, setPopoverOpen] = useState<boolean>(false);
 
   const filteredMemos = fetchedMemos.filter(
@@ -109,7 +110,24 @@ const AddMemoRelationPopover = (props: Props) => {
         editorRef.current?.scrollToCursor();
         editorRef.current?.focus();
       });
-    } else {
+    }
+    else if (moveMemo) {
+      let list = context.relationList.filter(e => e.type != MemoRelation_Type.COMMENT);
+      context.setRelationList(
+        uniqBy(
+          [
+            ...selectedMemos.map((memo) => ({
+              memo: MemoRelation_Memo.fromPartial({ name: context.memoName }),
+              relatedMemo: MemoRelation_Memo.fromPartial({ name: memo.name }),
+              type: MemoRelation_Type.COMMENT,
+            })),
+            ...list,
+          ].filter((relation) => relation.relatedMemo !== context.memoName),
+          "relatedMemo",
+        ),
+      );
+    }
+    else {
       context.setRelationList(
         uniqBy(
           [
@@ -175,6 +193,7 @@ const AddMemoRelationPopover = (props: Props) => {
           />
           <div className="mt-2 w-full flex flex-row justify-end items-center gap-2">
             <Checkbox size="sm" label={"Embed"} checked={embedded} onChange={(e) => setEmbedded(e.target.checked)} />
+            <Checkbox size="sm" label={"Move"} checked={moveMemo} onChange={(e) => setMoveMemo(e.target.checked)} />
             <Button size="sm" color="primary" onClick={addMemoRelations} disabled={selectedMemos.length === 0}>
               {t("common.add")}
             </Button>
