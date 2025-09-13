@@ -24,6 +24,7 @@ import { useTranslate } from "@/utils/i18n";
 import { convertVisibilityFromString, convertVisibilityToString } from "@/utils/memo";
 import VisibilityIcon from "../VisibilityIcon";
 import AddMemoRelationPopover from "./ActionButton/AddMemoRelationPopover";
+import MoveMemoPopover from "./ActionButton/MoveMemoPopover";
 import LocationSelector from "./ActionButton/LocationSelector";
 import MarkdownMenu from "./ActionButton/MarkdownMenu";
 import TagSelector from "./ActionButton/TagSelector";
@@ -471,6 +472,7 @@ const MemoEditor = (props: Props) => {
             <MarkdownMenu editorRef={editorRef} />
             <UploadResourceButton />
             <AddMemoRelationPopover editorRef={editorRef} />
+            <MoveMemoPopover editorRef={editorRef} />
             {workspaceMemoRelatedSetting.enableLocation && (
               <LocationSelector
                 location={state.location}
