@@ -39,7 +39,7 @@ func (s *Store) UpsertMemoRelation(ctx context.Context, create *MemoRelation) (*
 func (s *Store) ListMemoRelations(ctx context.Context, find *FindMemoRelation) ([]*MemoRelation, error) {
 	relations, err := s.driver.ListMemoRelations(ctx, find)
 	sort.Slice(relations, func(i, j int) bool {
-		return relations[i].MemoID < relations[j].MemoID
+		return relations[i].MemoID > relations[j].MemoID
 	})
 	return relations, err
 }
